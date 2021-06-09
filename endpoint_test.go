@@ -2,6 +2,7 @@ package endpoint
 
 import (
 	"errors"
+	"log"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -158,4 +159,19 @@ func TestEndpoint(t *testing.T) {
 	})
 
 	assert.Equal(t, "/test", p.File())
+}
+
+func ExampleParse() {
+	ep, err := Parse("http:example.com")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	protocol := ep.Protocol()
+	log.Println("protocol: ", protocol)
+
+	url, host, port := ep.HTTP()
+	log.Println("url: ", url)
+	log.Println("host: ", host)
+	log.Println("port: ", port)
 }
