@@ -39,7 +39,11 @@ func Parse(cfg string) (p Endpoint, err error) {
 		}
 		return NewHTTPS(host, port), nil
 	case ProtocolFile:
-		return NewFile(s[1]), nil
+		// Handle file paths that contains ":" (often happens on windows platform)
+		//
+		// See issue: https://github.com/beyondstorage/go-endpoint/issues/3
+		path := strings.Join(s[1:], ":")
+		return NewFile(path), nil
 	default:
 		return Endpoint{}, &Error{"parse", ErrUnsupportedProtocol, s[0], nil}
 	}

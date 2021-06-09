@@ -69,6 +69,12 @@ func TestParse(t *testing.T) {
 			Endpoint{ProtocolFile, "/root/data"},
 			nil,
 		},
+		{
+			"files contains `:`",
+			"file:C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\TestStorage_Stat286526883\\001\\199446694",
+			Endpoint{ProtocolFile, "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\TestStorage_Stat286526883\\001\\199446694"},
+			nil,
+		},
 	}
 
 	for _, tt := range cases {
