@@ -173,11 +173,21 @@ func ExampleParse() {
 		log.Fatal(err)
 	}
 
-	protocol := ep.Protocol()
-	log.Println("protocol: ", protocol)
-
-	url, host, port := ep.HTTP()
-	log.Println("url: ", url)
-	log.Println("host: ", host)
-	log.Println("port: ", port)
+	switch ep.Protocol() {
+	case ProtocolHTTP:
+		url, host, port := ep.HTTP()
+		log.Println("url: ", url)
+		log.Println("host: ", host)
+		log.Println("port: ", port)
+	case ProtocolHTTPS:
+		url, host, port := ep.HTTPS()
+		log.Println("url: ", url)
+		log.Println("host: ", host)
+		log.Println("port: ", port)
+	case ProtocolFile:
+		path := ep.File()
+		log.Println("path: ", path)
+	default:
+		panic("unsupported protocol")
+	}
 }
