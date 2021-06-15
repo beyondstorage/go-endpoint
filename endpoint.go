@@ -120,7 +120,7 @@ func (p Endpoint) HTTP() (url, host string, port int) {
 	if hp.port == 80 {
 		return fmt.Sprintf("%s://%s", p.protocol, hp.host), hp.host, 80
 	}
-	return fmt.Sprintf("%s://%d", p.protocol, hp.port), hp.host, hp.port
+	return fmt.Sprintf("%s://%s:%d", p.protocol, hp.host, hp.port), hp.host, hp.port
 }
 
 func (p Endpoint) HTTPS() (url, host string, port int) {

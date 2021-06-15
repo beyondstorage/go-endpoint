@@ -167,6 +167,36 @@ func TestEndpoint(t *testing.T) {
 	assert.Equal(t, "/test", p.File())
 }
 
+func TestEndpoint_HTTP(t *testing.T) {
+	p := NewHTTP("example.com", 80)
+
+	url, host, port := p.HTTP()
+	assert.Equal(t, "http://example.com", url)
+	assert.Equal(t, "example.com", host)
+	assert.Equal(t, 80, port)
+
+	p = NewHTTP("example.com", 8080)
+	url, host, port = p.HTTP()
+	assert.Equal(t, "http://example.com:8080", url)
+	assert.Equal(t, "example.com", host)
+	assert.Equal(t, 8080, port)
+}
+
+func TestEndpoint_HTTPS(t *testing.T) {
+	p := NewHTTPS("example.com", 443)
+
+	url, host, port := p.HTTPS()
+	assert.Equal(t, "https://example.com", url)
+	assert.Equal(t, "example.com", host)
+	assert.Equal(t, 443, port)
+
+	p = NewHTTPS("example.com", 4433)
+	url, host, port = p.HTTPS()
+	assert.Equal(t, "https://example.com:4433", url)
+	assert.Equal(t, "example.com", host)
+	assert.Equal(t, 4433, port)
+}
+
 func ExampleParse() {
 	ep, err := Parse("http:example.com")
 	if err != nil {
