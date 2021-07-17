@@ -18,7 +18,6 @@ I suggest adding a tcp protocol to allow the user to specify the address.
 It likes `tcp:<host>:<port>`
 
 - The `type` of `tcp` should be `String` and is a `const`
-- The `alias` of `ProtocolTCP` should follow  [go-endpoint](https://github.com/beyondstorage/go-endpoint/blob/master/README.md)
 - The `value` of `endpoint` should be parsed into `ProtocolTCP`  and   `args include <host>:<port>`
 
 ## Rationale
