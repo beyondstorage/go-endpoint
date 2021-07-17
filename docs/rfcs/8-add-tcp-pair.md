@@ -1,9 +1,9 @@
-- Author: bokket  [bokkett@gmail.com](mailto:bokkett@gmail.com)
+- Author: bokket  <bokkett@gmail.com>
 - Start Date: 2021-07-17
 - RFC PR: [beyondstorage/go-endpoint#8](https://github.com/beyondstorage/go-endpoint/pull/8)
 - Tracking Issue: [beyondstorage/go-endpoint/issues/7](https://github.com/beyondstorage/go-endpoint/issues/7)
 
-# RFC-8: Add Tcp pair
+# RFC-8: Add Tcp protocol
 
 Releated issue: [beyondstorage/go-endpoint/issues/7](https://github.com/beyondstorage/go-endpoint/issues/7)
 
@@ -13,21 +13,17 @@ hdfs usually use the `New(address string)` method to access a namenode node, the
 
 ## Proposal
 
-I suggest adding a pair to allow the user to specify the address.
+I suggest adding a tcp protocol to allow the user to specify the address.
+
+It likes `tcp:<host>:<port>`
 
 - The `type` of `tcp` should be `String` and is a `const`
-- The `format` of `ProtocolTcp` should follow  [go-endpoint](https://github.com/beyondstorage/go-endpoint/blob/master/README.md)
-- The `value` of `endpoint` should be parsed into `address include host and port`
-- Now we don't have a pair operation on the `hdfs address` or tcp-like operation
+- The `alias` of `ProtocolTcp` should follow  [go-endpoint](https://github.com/beyondstorage/go-endpoint/blob/master/README.md)
+- The `value` of `endpoint` should be parsed into `ProtocolTcp`  and   `args include <host>:<port>`
 
 ## Rationale
 
-### Why not use hadoop configuration?
-
-We can specify the configuration of the path via `LoadHadoopConf`
-If not specified, the default path `${hadoop_home}/conf` will be used
-
-However, there is no guarantee that the path is wrong, and it is more common for users to use the namenode address directly.
+Now we don't have a pair operation on the `hdfs address` or tcp-like operation
 
 ## Compatibility
 
@@ -35,56 +31,7 @@ No compatibility issues at this time.
 
 ## Implementation
 
-First add a  `String` type with the name `ProtocolTcp` in `endpoint`. 
-
-```go
-const {
-    //ProtocolTcp is the file endpoint protocol
-    ProtocolTcp = "tcp"
-}
-```
-
-Then implementing the Tcp method of endpoint
-
-```go
-func (p Endpoint) Tcp() (address string) {
-	if p.protocol != ProtocolTcp {
-		panic(Error{
-			Op:       "tcp",
-			Err:      ErrInvalidValue,
-			Protocol: p.protocol,
-			Values:   p.args,
-		})
-	}
-    //It must be host:port
-    return p.args.(string)
-}
-```
-
-Then implementing Parse and NewTcp methods
-
-```go
-func Parse(cfg string) (Provider, error) {
-	s := strings.Split(cfg, ":")
-
-	switch s[0] {
-	.....
-	case ProtocolTcp:
-        //Handle tcp connection (hdfs)
-        return NewTcp(s[1]),nil
-	default:
-		return Endpoint{}, &Error{"parse", ErrUnsupportedProtocol, s[0], nil}
-	}
-}
-```
-
-
-
-```go
-func NewTcp(address string) Endpoint {
-    return Endpoint{
-		protocol: ProtocolTcp,
-		args:     path,
-	}
-}
-```
+- Add protocol `tcp`
+- Implement protocol tcp formatted (`func (p Endpoint) Tcp() (address string)`)
+- Implement protocol tcp parser (`func Parse(cfg string) (Provider, error)`)
+- Implement protocol tcp object (`func NewTcp(address string) Endpoint `)
