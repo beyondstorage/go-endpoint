@@ -13,6 +13,8 @@ const (
 	ProtocolHTTPS = "https"
 	// ProtocolFile is the file endpoint protocol
 	ProtocolFile = "file"
+	// ProtocolTCP is the tcp endpoint protocol
+	ProtocolTCP = "tcp"
 )
 
 // Parse will parse config string to create a endpoint Endpoint.
@@ -44,6 +46,13 @@ func Parse(cfg string) (p Endpoint, err error) {
 		// See issue: https://github.com/beyondstorage/go-endpoint/issues/3
 		path := strings.Join(s[1:], ":")
 		return NewFile(path), nil
+	case ProtocolTCP:
+		//See issue: https://github.com/beyondstorage/go-endpoint/issues/7
+		host, port, err := parseHostPort(s[1:])
+		if err != nil {
+			return Endpoint{}, &Error{"parse", ErrInvalidValue, s[0], []string{s[1], s[2]}}
+		}
+		return NewTCP(host, port), nil
 	default:
 		return Endpoint{}, &Error{"parse", ErrUnsupportedProtocol, s[0], nil}
 	}
@@ -92,6 +101,13 @@ func NewFile(path string) Endpoint {
 	return Endpoint{
 		protocol: ProtocolFile,
 		args:     path,
+	}
+}
+
+func NewTCP(host string, port int) Endpoint {
+	return Endpoint{
+		protocol: ProtocolTCP,
+		args:     hostPort{host, port},
 	}
 }
 
@@ -151,4 +167,17 @@ func (p Endpoint) File() (path string) {
 	}
 
 	return p.args.(string)
+}
+
+func (p Endpoint) TCP() (addr, host string, port int) {
+	if p.protocol != ProtocolTCP {
+		panic(Error{
+			Op:       "tcp",
+			Err:      ErrInvalidValue,
+			Protocol: p.protocol,
+			Values:   p.args,
+		})
+	}
+	hp := p.args.(hostPort)
+	return fmt.Sprintf("%s:%s:%d", p.protocol, hp.host, hp.port), hp.host, hp.port
 }
