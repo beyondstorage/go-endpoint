@@ -1,9 +1,9 @@
 - Author: bokket  <bokkett@gmail.com>
 - Start Date: 2021-07-17
 - RFC PR: [beyondstorage/go-endpoint#8](https://github.com/beyondstorage/go-endpoint/pull/8)
-- Tracking Issue: [beyondstorage/go-endpoint/issues/7](https://github.com/beyondstorage/go-endpoint/issues/7)
+- Tracking Issue: [beyondstorage/go-endpoint/issues/9](https://github.com/beyondstorage/go-endpoint/issues/9)
 
-# RFC-8: Add Tcp protocol
+# RFC-8: Add TCP protocol
 
 Releated issue: [beyondstorage/go-endpoint/issues/7](https://github.com/beyondstorage/go-endpoint/issues/7)
 
@@ -18,8 +18,8 @@ I suggest adding a tcp protocol to allow the user to specify the address.
 It likes `tcp:<host>:<port>`
 
 - The `type` of `tcp` should be `String` and is a `const`
-- The `alias` of `ProtocolTcp` should follow  [go-endpoint](https://github.com/beyondstorage/go-endpoint/blob/master/README.md)
-- The `value` of `endpoint` should be parsed into `ProtocolTcp`  and   `args include <host>:<port>`
+- The `alias` of `ProtocolTCP` should follow  [go-endpoint](https://github.com/beyondstorage/go-endpoint/blob/master/README.md)
+- The `value` of `endpoint` should be parsed into `ProtocolTCP`  and   `args include <host>:<port>`
 
 ## Rationale
 
@@ -32,6 +32,6 @@ No compatibility issues at this time.
 ## Implementation
 
 - Add protocol `tcp`
-- Implement protocol tcp formatted (`func (p Endpoint) Tcp() (address string)`)
-- Implement protocol tcp parser (`func Parse(cfg string) (Provider, error)`)
-- Implement protocol tcp object (`func NewTcp(address string) Endpoint `)
+- Implement protocol tcp formatted (`func (p Endpoint) TCP() (addr,host string,port int)`)
+- Implement protocol tcp parser (`func Parse(cfg string) (p Endpoint, err error)`)
+- Implement protocol tcp object (`func NewTCP(host string,port int) Endpoint `)
