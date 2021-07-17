@@ -1,7 +1,7 @@
 - Author: bokket  <bokkett@gmail.com>
 - Start Date: 2021-07-17
 - RFC PR: [beyondstorage/go-endpoint#8](https://github.com/beyondstorage/go-endpoint/pull/8)
-- Tracking Issue: [beyondstorage/go-endpoint/issues/7](https://github.com/beyondstorage/go-endpoint/issues/7)
+- Tracking Issue: [beyondstorage/go-endpoint/issues/9](https://github.com/beyondstorage/go-endpoint/issues/9)
 
 # RFC-8: Add Tcp protocol
 
