@@ -19,7 +19,7 @@ It likes `tcp:<host>:<port>`
 
 - The `type` of `tcp` should be `String` and is a `const`
 - The `alias` of `ProtocolTcp` should follow  [go-endpoint](https://github.com/beyondstorage/go-endpoint/blob/master/README.md)
-- The `value` of `endpoint` should be parsed into `ProtocolTcp`  and   `args include <host>:<port>`
+- The `value` of `endpoint` should be parsed into `ProtocolTcp`  and  `args include <host>:<port>`
 
 ## Rationale
 
