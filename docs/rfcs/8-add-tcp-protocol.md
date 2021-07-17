@@ -32,6 +32,6 @@ No compatibility issues at this time.
 ## Implementation
 
 - Add protocol `tcp`
-- Implement protocol tcp formatted (`func (p Endpoint) TCP() (addr,host string,port int)`)
+- Implement protocol tcp formatted (`func (p Endpoint) TCP() (addr, host string, port int)`)
 - Implement protocol tcp parser (`func Parse(cfg string) (p Endpoint, err error)`)
 - Implement protocol tcp object (`func NewTCP(host string,port int) Endpoint `)
