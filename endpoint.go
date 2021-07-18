@@ -179,5 +179,5 @@ func (p Endpoint) TCP() (addr, host string, port int) {
 		})
 	}
 	hp := p.args.(hostPort)
-	return fmt.Sprintf("%s:%s:%d", p.protocol, hp.host, hp.port), hp.host, hp.port
+	return fmt.Sprintf("%s:%d", hp.host, hp.port), hp.host, hp.port
 }

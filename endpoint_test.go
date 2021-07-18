@@ -75,6 +75,18 @@ func TestParse(t *testing.T) {
 			Endpoint{ProtocolFile, "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\TestStorage_Stat286526883\\001\\199446694"},
 			nil,
 		},
+		{
+			"normal tcp",
+			"tcp:127.0.0.1:8000",
+			Endpoint{ProtocolTCP, hostPort{"127.0.0.1", 8000}},
+			nil,
+		},
+		{
+			"wrong port number in tcp",
+			"tcp:127.0.0.1:xxx",
+			Endpoint{},
+			ErrInvalidValue,
+		},
 	}
 
 	for _, tt := range cases {
@@ -223,7 +235,7 @@ func TestEndpoint_TCP(t *testing.T) {
 	p := NewTCP("127.0.0.1", 8000)
 
 	addr, host, port := p.TCP()
-	assert.Equal(t, "tcp:127.0.0.1:8000", addr)
+	assert.Equal(t, "127.0.0.1:8000", addr)
 	assert.Equal(t, "127.0.0.1", host)
 	assert.Equal(t, 8000, port)
 }
