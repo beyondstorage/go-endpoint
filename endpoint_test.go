@@ -75,6 +75,18 @@ func TestParse(t *testing.T) {
 			Endpoint{ProtocolFile, "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\TestStorage_Stat286526883\\001\\199446694"},
 			nil,
 		},
+		{
+			"normal tcp",
+			"tcp:127.0.0.1:8000",
+			Endpoint{ProtocolTCP, hostPort{"127.0.0.1", 8000}},
+			nil,
+		},
+		{
+			"wrong port number in tcp",
+			"tcp:127.0.0.1:xxx",
+			Endpoint{},
+			ErrInvalidValue,
+		},
 	}
 
 	for _, tt := range cases {
@@ -108,10 +120,23 @@ func TestNewHTTPS(t *testing.T) {
 	)
 }
 
+func TestNewTCP(t *testing.T) {
+	assert.Equal(t,
+		Endpoint{ProtocolTCP, hostPort{"127.0.0.1", 8000}},
+		NewTCP("127.0.0.1", 8000),
+	)
+}
+
 func TestEndpoint_Protocol(t *testing.T) {
 	ep := NewFile("/test")
 
 	assert.Equal(t, ProtocolFile, ep.Protocol())
+}
+
+func TestEndpoint_Protocol2(t *testing.T) {
+	ep := NewTCP("127.0.0.1", 8000)
+
+	assert.Equal(t, ProtocolTCP, ep.Protocol())
 }
 
 func TestEndpoint_String(t *testing.T) {
@@ -145,6 +170,11 @@ func TestEndpoint_String(t *testing.T) {
 			Endpoint{ProtocolHTTPS, hostPort{"example.com", 4433}},
 			"https:example.com:4433",
 		},
+		{
+			"tcp with port",
+			Endpoint{ProtocolTCP, hostPort{"127.0.0.1", 8000}},
+			"tcp:127.0.0.1:8000",
+		},
 	}
 
 	for _, tt := range cases {
@@ -162,6 +192,10 @@ func TestEndpoint(t *testing.T) {
 	})
 	assert.Panics(t, func() {
 		p.HTTPS()
+	})
+
+	assert.Panics(t, func() {
+		p.TCP()
 	})
 
 	assert.Equal(t, "/test", p.File())
@@ -197,6 +231,15 @@ func TestEndpoint_HTTPS(t *testing.T) {
 	assert.Equal(t, 4433, port)
 }
 
+func TestEndpoint_TCP(t *testing.T) {
+	p := NewTCP("127.0.0.1", 8000)
+
+	addr, host, port := p.TCP()
+	assert.Equal(t, "127.0.0.1:8000", addr)
+	assert.Equal(t, "127.0.0.1", host)
+	assert.Equal(t, 8000, port)
+}
+
 func ExampleParse() {
 	ep, err := Parse("http:example.com")
 	if err != nil {
@@ -217,6 +260,11 @@ func ExampleParse() {
 	case ProtocolFile:
 		path := ep.File()
 		log.Println("path: ", path)
+	case ProtocolTCP:
+		addr, host, port := ep.TCP()
+		log.Println("addr:", addr)
+		log.Println("host:", host)
+		log.Println("port", port)
 	default:
 		panic("unsupported protocol")
 	}
