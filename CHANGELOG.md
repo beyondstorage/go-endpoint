@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [v1.1.0] - 2021-07-28
+
+### Added
+
+- Implementing RFC-8: Add TCP Protocol (#11)
+- RFC-8: Add TCP protocol (#8)
+
 ## [v1.0.1] - 2021-06-15
 
 ### Fixed
