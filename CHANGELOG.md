@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [v1.1.0] - 2021-07-28
+
+### Added
+
+- Implementing RFC-8: Add TCP Protocol (#11)
+- RFC-8: Add TCP protocol (#8)
+
 ## [v1.0.1] - 2021-06-15
 
 ### Fixed
@@ -21,5 +28,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Add Parse support
 - Add http/https/file protocol support
 
-[Unreleased]: https://github.com/beyondstorage/go-endpoint/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/beyondstorage/go-endpoint/compare/v1.1.0...HEAD
+[v1.1.0]: https://github.com/beyondstorage/go-endpoint/compare/v1.0.1...v1.1.0
 [v1.0.1]: https://github.com/beyondstorage/go-endpoint/compare/v1.0.0...v1.0.1
