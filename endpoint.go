@@ -69,7 +69,7 @@ func (hp hostPort) String() string {
 
 func parseHostPort(s []string) (host string, port int, err error) {
 	if len(s) == 1 {
-		return s[0], 0, nil
+		return strings.TrimLeft(s[0], "//"), 0, nil
 	}
 	v, err := strconv.ParseInt(s[1], 10, 64)
 	if err != nil {
