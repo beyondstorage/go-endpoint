@@ -44,6 +44,10 @@ func Parse(cfg string) (p Endpoint, err error) {
 		// Handle file paths that contains ":" (often happens on windows platform)
 		//
 		// See issue: https://github.com/beyondstorage/go-endpoint/issues/3
+		s[1] = strings.TrimLeft(s[1], "/")
+		if strings.Count(cfg, ":") < 2 {
+			s[1] = "/" + s[1]
+		}
 		path := strings.Join(s[1:], ":")
 		return NewFile(path), nil
 	case ProtocolTCP:
@@ -69,13 +73,13 @@ func (hp hostPort) String() string {
 
 func parseHostPort(s []string) (host string, port int, err error) {
 	if len(s) == 1 {
-		return strings.TrimLeft(s[0], "//"), 0, nil
+		return strings.TrimLeft(s[0], "/"), 0, nil
 	}
 	v, err := strconv.ParseInt(s[1], 10, 64)
 	if err != nil {
 		return "", 0, err
 	}
-	return strings.TrimLeft(s[0], "//"), int(v), nil
+	return strings.TrimLeft(s[0], "/"), int(v), nil
 }
 
 type Endpoint struct {

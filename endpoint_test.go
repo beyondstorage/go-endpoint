@@ -34,6 +34,12 @@ func TestParse(t *testing.T) {
 			nil,
 		},
 		{
+			"normal http with multi /",
+			"http://////example.com:80",
+			Endpoint{ProtocolHTTP, hostPort{"example.com", 80}},
+			nil,
+		},
+		{
 			"normal http without port",
 			"http:example.com",
 			Endpoint{ProtocolHTTP, hostPort{"example.com", 80}},
@@ -42,6 +48,12 @@ func TestParse(t *testing.T) {
 		{
 			"normal http without port, with //",
 			"http://example.com",
+			Endpoint{ProtocolHTTP, hostPort{"example.com", 80}},
+			nil,
+		},
+		{
+			"normal http without port, with multi /",
+			"http://///example.com",
 			Endpoint{ProtocolHTTP, hostPort{"example.com", 80}},
 			nil,
 		},
@@ -58,6 +70,12 @@ func TestParse(t *testing.T) {
 			ErrInvalidValue,
 		},
 		{
+			"wrong port number in http, with multi /",
+			"http://///example.com:xxx",
+			Endpoint{},
+			ErrInvalidValue,
+		},
+		{
 			"normal https",
 			"https:example.com:443",
 			Endpoint{ProtocolHTTPS, hostPort{"example.com", 443}},
@@ -66,6 +84,12 @@ func TestParse(t *testing.T) {
 		{
 			"normal https with //",
 			"https://example.com:443",
+			Endpoint{ProtocolHTTPS, hostPort{"example.com", 443}},
+			nil,
+		},
+		{
+			"normal https with multi /",
+			"https://///example.com:443",
 			Endpoint{ProtocolHTTPS, hostPort{"example.com", 443}},
 			nil,
 		},
@@ -82,6 +106,12 @@ func TestParse(t *testing.T) {
 			nil,
 		},
 		{
+			"normal https without port with multi /",
+			"https://///example.com",
+			Endpoint{ProtocolHTTPS, hostPort{"example.com", 443}},
+			nil,
+		},
+		{
 			"wrong port number in https",
 			"https:example.com:xxx",
 			Endpoint{},
@@ -90,6 +120,12 @@ func TestParse(t *testing.T) {
 		{
 			"wrong port number in https with //",
 			"https://example.com:xxx",
+			Endpoint{},
+			ErrInvalidValue,
+		},
+		{
+			"wrong port number in https with multi /",
+			"https://///example.com:xxx",
 			Endpoint{},
 			ErrInvalidValue,
 		},
@@ -112,8 +148,20 @@ func TestParse(t *testing.T) {
 			nil,
 		},
 		{
+			"normal file with multi /",
+			"file://////root/data",
+			Endpoint{ProtocolFile, "/root/data"},
+			nil,
+		},
+		{
 			"files contains `:`",
 			"file:C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\TestStorage_Stat286526883\\001\\199446694",
+			Endpoint{ProtocolFile, "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\TestStorage_Stat286526883\\001\\199446694"},
+			nil,
+		},
+		{
+			"files contains `:` with muti /",
+			"file://///C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\TestStorage_Stat286526883\\001\\199446694",
 			Endpoint{ProtocolFile, "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\TestStorage_Stat286526883\\001\\199446694"},
 			nil,
 		},
@@ -126,6 +174,12 @@ func TestParse(t *testing.T) {
 		{
 			"normal tcp with //",
 			"tcp://127.0.0.1:8000",
+			Endpoint{ProtocolTCP, hostPort{"127.0.0.1", 8000}},
+			nil,
+		},
+		{
+			"normal tcp with multi /",
+			"tcp://///127.0.0.1:8000",
 			Endpoint{ProtocolTCP, hostPort{"127.0.0.1", 8000}},
 			nil,
 		},
