@@ -75,7 +75,7 @@ func parseHostPort(s []string) (host string, port int, err error) {
 	if err != nil {
 		return "", 0, err
 	}
-	return s[0], int(v), nil
+	return strings.TrimLeft(s[0], "//"), int(v), nil
 }
 
 type Endpoint struct {
