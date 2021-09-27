@@ -21,11 +21,15 @@ const (
 func Parse(cfg string) (p Endpoint, err error) {
 	s := strings.Split(cfg, ":")
 
+	//delete headmost '//'
+	if len(s) > 1 && strings.HasPrefix(s[1], "//") {
+		s[1] = s[1][2:]
+	}
 	switch s[0] {
 	case ProtocolHTTP:
 		host, port, err := parseHostPort(s[1:])
-		if err != nil {
-			return Endpoint{}, &Error{"parse", ErrInvalidValue, s[0], []string{s[1], s[2]}}
+		if err != nil || strings.HasPrefix(host, "/") {
+			return Endpoint{}, &Error{"parse", ErrInvalidValue, s[0], s[1:]}
 		}
 		if port == 0 {
 			port = 80
@@ -33,8 +37,8 @@ func Parse(cfg string) (p Endpoint, err error) {
 		return NewHTTP(host, port), nil
 	case ProtocolHTTPS:
 		host, port, err := parseHostPort(s[1:])
-		if err != nil {
-			return Endpoint{}, &Error{"parse", ErrInvalidValue, s[0], []string{s[1], s[2]}}
+		if err != nil || strings.HasPrefix(host, "/") {
+			return Endpoint{}, &Error{"parse", ErrInvalidValue, s[0], s[1:]}
 		}
 		if port == 0 {
 			port = 443
@@ -44,17 +48,13 @@ func Parse(cfg string) (p Endpoint, err error) {
 		// Handle file paths that contains ":" (often happens on windows platform)
 		//
 		// See issue: https://github.com/beyondstorage/go-endpoint/issues/3
-		s[1] = strings.TrimLeft(s[1], "/")
-		if strings.Count(cfg, ":") < 2 {
-			s[1] = "/" + s[1]
-		}
 		path := strings.Join(s[1:], ":")
 		return NewFile(path), nil
 	case ProtocolTCP:
 		//See issue: https://github.com/beyondstorage/go-endpoint/issues/7
 		host, port, err := parseHostPort(s[1:])
-		if err != nil {
-			return Endpoint{}, &Error{"parse", ErrInvalidValue, s[0], []string{s[1], s[2]}}
+		if err != nil || strings.HasPrefix(host, "/") {
+			return Endpoint{}, &Error{"parse", ErrInvalidValue, s[0], s[1:]}
 		}
 		return NewTCP(host, port), nil
 	default:
@@ -73,13 +73,13 @@ func (hp hostPort) String() string {
 
 func parseHostPort(s []string) (host string, port int, err error) {
 	if len(s) == 1 {
-		return strings.TrimLeft(s[0], "/"), 0, nil
+		return s[0], 0, nil
 	}
 	v, err := strconv.ParseInt(s[1], 10, 64)
 	if err != nil {
 		return "", 0, err
 	}
-	return strings.TrimLeft(s[0], "/"), int(v), nil
+	return s[0], int(v), nil
 }
 
 type Endpoint struct {

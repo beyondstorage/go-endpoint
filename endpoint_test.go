@@ -36,8 +36,8 @@ func TestParse(t *testing.T) {
 		{
 			"normal http with multi /",
 			"http://////example.com:80",
-			Endpoint{ProtocolHTTP, hostPort{"example.com", 80}},
-			nil,
+			Endpoint{},
+			ErrInvalidValue,
 		},
 		{
 			"normal http without port",
@@ -54,8 +54,8 @@ func TestParse(t *testing.T) {
 		{
 			"normal http without port, with multi /",
 			"http://///example.com",
-			Endpoint{ProtocolHTTP, hostPort{"example.com", 80}},
-			nil,
+			Endpoint{},
+			ErrInvalidValue,
 		},
 		{
 			"wrong port number in http",
@@ -90,8 +90,8 @@ func TestParse(t *testing.T) {
 		{
 			"normal https with multi /",
 			"https://///example.com:443",
-			Endpoint{ProtocolHTTPS, hostPort{"example.com", 443}},
-			nil,
+			Endpoint{},
+			ErrInvalidValue,
 		},
 		{
 			"normal https without port",
@@ -108,8 +108,8 @@ func TestParse(t *testing.T) {
 		{
 			"normal https without port with multi /",
 			"https://///example.com",
-			Endpoint{ProtocolHTTPS, hostPort{"example.com", 443}},
-			nil,
+			Endpoint{},
+			ErrInvalidValue,
 		},
 		{
 			"wrong port number in https",
@@ -149,7 +149,7 @@ func TestParse(t *testing.T) {
 		},
 		{
 			"normal file with multi /",
-			"file://////root/data",
+			"file:///root/data",
 			Endpoint{ProtocolFile, "/root/data"},
 			nil,
 		},
@@ -161,8 +161,8 @@ func TestParse(t *testing.T) {
 		},
 		{
 			"files contains `:` with muti /",
-			"file://///C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\TestStorage_Stat286526883\\001\\199446694",
-			Endpoint{ProtocolFile, "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\TestStorage_Stat286526883\\001\\199446694"},
+			"file:///C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\TestStorage_Stat286526883\\001\\199446694",
+			Endpoint{ProtocolFile, "/C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\TestStorage_Stat286526883\\001\\199446694"},
 			nil,
 		},
 		{
@@ -180,8 +180,8 @@ func TestParse(t *testing.T) {
 		{
 			"normal tcp with multi /",
 			"tcp://///127.0.0.1:8000",
-			Endpoint{ProtocolTCP, hostPort{"127.0.0.1", 8000}},
-			nil,
+			Endpoint{},
+			ErrInvalidValue,
 		},
 		{
 			"wrong port number in tcp",
