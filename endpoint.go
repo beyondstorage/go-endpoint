@@ -21,11 +21,15 @@ const (
 func Parse(cfg string) (p Endpoint, err error) {
 	s := strings.Split(cfg, ":")
 
+	//delete headmost '//'
+	if len(s) > 1 && strings.HasPrefix(s[1], "//") {
+		s[1] = s[1][2:]
+	}
 	switch s[0] {
 	case ProtocolHTTP:
 		host, port, err := parseHostPort(s[1:])
-		if err != nil {
-			return Endpoint{}, &Error{"parse", ErrInvalidValue, s[0], []string{s[1], s[2]}}
+		if err != nil || strings.HasPrefix(host, "/") {
+			return Endpoint{}, &Error{"parse", ErrInvalidValue, s[0], s[1:]}
 		}
 		if port == 0 {
 			port = 80
@@ -33,8 +37,8 @@ func Parse(cfg string) (p Endpoint, err error) {
 		return NewHTTP(host, port), nil
 	case ProtocolHTTPS:
 		host, port, err := parseHostPort(s[1:])
-		if err != nil {
-			return Endpoint{}, &Error{"parse", ErrInvalidValue, s[0], []string{s[1], s[2]}}
+		if err != nil || strings.HasPrefix(host, "/") {
+			return Endpoint{}, &Error{"parse", ErrInvalidValue, s[0], s[1:]}
 		}
 		if port == 0 {
 			port = 443
@@ -49,8 +53,8 @@ func Parse(cfg string) (p Endpoint, err error) {
 	case ProtocolTCP:
 		//See issue: https://github.com/beyondstorage/go-endpoint/issues/7
 		host, port, err := parseHostPort(s[1:])
-		if err != nil {
-			return Endpoint{}, &Error{"parse", ErrInvalidValue, s[0], []string{s[1], s[2]}}
+		if err != nil || strings.HasPrefix(host, "/") {
+			return Endpoint{}, &Error{"parse", ErrInvalidValue, s[0], s[1:]}
 		}
 		return NewTCP(host, port), nil
 	default:
